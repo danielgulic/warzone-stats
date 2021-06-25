@@ -9,10 +9,10 @@
 	"license": "MIT",
 	"private": true,
 	"scripts": {
-		"dev": "ts-node .",
 		"build": "tsc",
 		"build:nix": "tsc && sed -i '1i#!/usr/bin/env node' dist/index.js && chmod +x dist/index.js",
-		"start": "node dist/"
+		"start": "ts-node .",
+		"start:dist": "node dist/"
 	},
 	"dependencies": {
 		"dabf": "^0.0.4",

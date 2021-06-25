@@ -31,10 +31,6 @@ export class PingMeCommand extends Command {
 		const userPreferences = connection.getRepository(UserPreferences);
 		let pingMeStatuses = (await userPreferences.findOne($.message.author.id))
 			?.staffPingStatusesOverride || ['online'];
-		console.log(pingMeStatuses);
-
-		console.log($.message.content);
-		console.log($.message.content.length);
 
 		const embed = new MessageEmbed()
 			.setTitle('Ping preferences')
@@ -53,7 +49,6 @@ export class PingMeCommand extends Command {
 		switch (action) {
 			case '+':
 			case 'add':
-				console.log('pingme add');
 				if (!status)
 					return $.message.channel.send(
 						':question: You need to include a status to add (`Online`, `DND`, `Idle`, or `Invisible`)'
@@ -87,7 +82,6 @@ export class PingMeCommand extends Command {
 				break;
 
 			case 'show':
-				console.log('pingme show');
 				const statuses = allStatuses.filter(s =>
 					pingMeStatuses.includes(s.toLowerCase())
 				);
@@ -115,7 +109,6 @@ export class PingMeCommand extends Command {
 				id: $.message.author.id,
 				staffPingStatusesOverride: pingMeStatuses,
 			});
-		console.log('prefs', prefs);
 
 		await $.message.react('✅');
 	}

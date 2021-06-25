@@ -1,4 +1,4 @@
-FROM node:15.9-alpine3.10
+FROM node:15.6-alpine3.10
 
 WORKDIR /usr/src/app
 
@@ -9,4 +9,4 @@ RUN yarn
 
 COPY . .
 
-CMD ["yarn", "dev"]
+CMD ["yarn", "start"]
