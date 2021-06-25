@@ -86,7 +86,6 @@ export class PingMeCommand extends Command {
 				);
 				break;
 
-			default:
 			case 'show':
 				console.log('pingme show');
 				const statuses = allStatuses.filter(s =>
@@ -100,6 +99,9 @@ export class PingMeCommand extends Command {
 						: '*(No statuses; never ping)*'
 				);
 				return $.message.channel.send(embed);
+
+			default:
+				return $.message.channel.send(action?.length || 'none');
 		}
 
 		const prefs = await userPreferences.findOne($.message.author.id);
