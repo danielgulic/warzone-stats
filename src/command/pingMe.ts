@@ -20,6 +20,7 @@ export class PingMeCommand extends Command {
 		if (!$.message.member.roles.cache.some(r => staffRoles.includes(r.id)))
 			return $.message.react('⛔');
 
+		action = action?.toLowerCase();
 		status = status?.toLowerCase();
 
 		if (action && !['show', 'add', 'remove', 'rm'].includes(action))
@@ -45,47 +46,54 @@ export class PingMeCommand extends Command {
 			])
 			.setColor($.message.member?.roles.highest.color);
 
-		console.log(action);
-
-		if (!action || action.toLowerCase() === 'show') {
-			const statuses = allStatuses.filter(s =>
-				pingMeStatuses.includes(s.toLowerCase())
-			);
-
-			embed.addField(
-				"Ping me when I'm",
-				statuses.length > 0
-					? statuses.join('\n')
-					: '*(No statuses; never ping)*'
-			);
-			return $.message.channel.send(embed);
-		} else if (['+', 'add'].includes(action.toLowerCase())) {
-			if (!status)
-				return $.message.channel.send(
-					':question: You need to include a status to add (`Online`, `DND`, `Idle`, or `Invisible`)'
+		switch (action) {
+			default:
+			case 'show':
+				const statuses = allStatuses.filter(s =>
+					pingMeStatuses.includes(s.toLowerCase())
 				);
 
-			if (!allStatuses.map(s => s.toLowerCase()).includes(status))
-				return $.message.channel.send(
-					':question: You can only add the following statuses: `Online`, `DND`, `Idle`, `Invisible`'
+				embed.addField(
+					"Ping me when I'm",
+					statuses.length > 0
+						? statuses.join('\n')
+						: '*(No statuses; never ping)*'
 				);
+				return $.message.channel.send(embed);
 
-			pingMeStatuses.push(status);
-			pingMeStatuses = [...new Set(pingMeStatuses)];
-		} else if (['-', 'rm', 'remove'].includes(action.toLowerCase())) {
-			if (!status)
-				return $.message.channel.send(
-					':question: You need to include a status to remove (`Online`, `DND`, `Idle`, or `Invisible`)'
+			case '+':
+			case 'add':
+				if (!status)
+					return $.message.channel.send(
+						':question: You need to include a status to add (`Online`, `DND`, `Idle`, or `Invisible`)'
+					);
+
+				if (!allStatuses.map(s => s.toLowerCase()).includes(status))
+					return $.message.channel.send(
+						':question: You can only add the following statuses: `Online`, `DND`, `Idle`, `Invisible`'
+					);
+
+				pingMeStatuses.push(status);
+				pingMeStatuses = [...new Set(pingMeStatuses)];
+				break;
+
+			case '-':
+			case 'rm':
+			case 'remove':
+				if (!status)
+					return $.message.channel.send(
+						':question: You need to include a status to remove (`Online`, `DND`, `Idle`, or `Invisible`)'
+					);
+
+				if (!allStatuses.map(s => s.toLowerCase()).includes(status))
+					return $.message.channel.send(
+						':question: You can only remove the following statuses: `Online`, `DND`, `Idle`, `Invisible`'
+					);
+
+				pingMeStatuses = pingMeStatuses.filter(
+					(pingStatus: string) => pingStatus !== status
 				);
-
-			if (!allStatuses.map(s => s.toLowerCase()).includes(status))
-				return $.message.channel.send(
-					':question: You can only remove the following statuses: `Online`, `DND`, `Idle`, `Invisible`'
-				);
-
-			pingMeStatuses = pingMeStatuses.filter(
-				(pingStatus: string) => pingStatus !== status
-			);
+				break;
 		}
 
 		const prefs = await userPreferences.findOne($.message.author.id);
