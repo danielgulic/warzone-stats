@@ -11,7 +11,11 @@ export class PingMeCommand extends Command {
 	aliases = ['pingme'];
 
 	@CommandRun()
-	async run($: Context, action?: string, status?: string) {
+	async run(
+		$: Context,
+		action: string | undefined = undefined,
+		status?: string
+	) {
 		if (!$.message.member)
 			return $.message.channel.send(
 				':warning: This command can only be used in a server'
