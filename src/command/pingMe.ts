@@ -33,6 +33,9 @@ export class PingMeCommand extends Command {
 			?.staffPingStatusesOverride || ['online'];
 		console.log(pingMeStatuses);
 
+		console.log($.message.content);
+		console.log($.message.content.length);
+
 		const embed = new MessageEmbed()
 			.setTitle('Ping preferences')
 			.setDescription([
@@ -48,21 +51,6 @@ export class PingMeCommand extends Command {
 			.setColor($.message.member?.roles.highest.color);
 
 		switch (action) {
-			default:
-			case 'show':
-				console.log('pingme show');
-				const statuses = allStatuses.filter(s =>
-					pingMeStatuses.includes(s.toLowerCase())
-				);
-
-				embed.addField(
-					"Ping me when I'm",
-					statuses.length > 0
-						? statuses.join('\n')
-						: '*(No statuses; never ping)*'
-				);
-				return $.message.channel.send(embed);
-
 			case '+':
 			case 'add':
 				console.log('pingme add');
@@ -97,6 +85,21 @@ export class PingMeCommand extends Command {
 					(pingStatus: string) => pingStatus !== status
 				);
 				break;
+
+			default:
+			case 'show':
+				console.log('pingme show');
+				const statuses = allStatuses.filter(s =>
+					pingMeStatuses.includes(s.toLowerCase())
+				);
+
+				embed.addField(
+					"Ping me when I'm",
+					statuses.length > 0
+						? statuses.join('\n')
+						: '*(No statuses; never ping)*'
+				);
+				return $.message.channel.send(embed);
 		}
 
 		const prefs = await userPreferences.findOne($.message.author.id);
