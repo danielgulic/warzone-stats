@@ -28,7 +28,7 @@ export let connection: Connection;
 		type: 'postgres',
 		url: process.env.DATABASE_URL,
 		synchronize: true,
-		logging: false,
+		logging: true,
 		entities: [UserPreferences],
 	});
 })();
